@@ -1,48 +1,73 @@
-{% extends "users/base.html" %}
+{% extends "layout.html" %}
 {%load static%}
-{% block title %}Profile Page{% endblock title %}
+{% load crispy_forms_tags %}
 {% block content %}
-<link rel="stylesheet" href="{% static 'css/users.css' %}">
-<div class="center">
-    <div class="row my-3 p-3" class="center">
-        <img class="rounded-circle account-img" src="{{ user.profile.avatar.url }} " style="cursor: pointer;"/>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+</br></br></br></br></br>
+<div class="container">
+    <div class="row d-flex justify-content-center">
+      <img class="col-md-3 avatar img-circle rounded-circle" src=" {{ user.profile.image.url }}"> 
+      <br>
+
+  </div>
+</br>
+    <form method="POST" enctype="multipart/form-data">
+      {% csrf_token %}
+      <fieldset class="form-group">
+          <legend class="border-bottom mb-4"> Profile Info</legend>
+          {{ u_form|crispy }}
+          {{ p_form|crispy }}
+
+
+      </fieldset>
+      <div class="form-group">
+          <button class="btn btn-outline-info" type="submit">Update</button>
+
+      </div>
+  </form>
+  </div>  
+
+{% endblock content %} 
+
+
+{% comment %} {% load crispy_forms_tags %}
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+<div class="container">
+  <h1>Edit Profile</h1>
+  <hr>
+<div class="row">
+    <!-- left column -->
+    <div class="col-md-3">
+      <div class="text-center">
+        <img src="{{ user.profile.image.url }}" class="img-circle" alt="avatar">
+        <h6>Upload a different photo...</h6>
+        
+        <input type="file" class="form-control">
+      </div>
     </div>
-    {% if user_form.errors %}
-        <div class="alert alert-danger alert-dismissible" role="alert" class="center">
-            <div id="form_errors">
-                {% for key, value in user_form.errors.items %}
-                    <strong>{{ value }}</strong>
-                {% endfor %}
+    
+    <!-- edit form column -->
+    <div class="col-md-9 personal-info">
+      <div class="alert alert-info alert-dismissable">
+        <a class="panel-close close" data-dismiss="alert">×</a> 
+        <i class="fa fa-coffee"></i>
+        This is an <strong>.alert</strong>. Use this to show important messages to the user.
+      </div>
+      <h3>Personal info</h3>
+      
+      <form class="form-horizontal" role="form">
+        <form method="POST" enctype="multipart/form-data" class="form-group">
+          {% csrf_token %}
+
+              {{ u_form|crispy }}
+              {{ p_form|crispy }}
+    
+    
+              <button class="btn btn-outline-info" type="submit">Update</button>
+
             </div>
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-    {% endif %}
-    <div class="form-content">
-        <form method="post" enctype="multipart/form-data">
-            {% csrf_token %}
-            <div class="form-row">
-                <div class="col-md-5">
-                    <div class="form-group">
-                        <label class="small mb-1">Username:</label>
-                            {{ user_form.username }}
-                        <label class="small mb-1">Email:</label>
-                            {{ user_form.email }}
-                    </div>
-                    <div class="form-group">
-                        <a href="{% url 'password_change' %}">Change Password</a>
-                        <hr>
-                        <label class="small mb-1">Change Avatar:</label>
-                        {{ profile_form.avatar }}
-                    </div>
-                    <label class="small mb-1">Bio:</label> {{ profile_form.bio }}
-                </div>
-            </div>
-            <br><br>
-            <button type="submit" class="btn btn-dark btn-lg">Save Changes</button>
-            <button type="reset" class="btn btn-dark btn-lg">Reset</button>
-        </form>
+      </form>
     </div>
 </div>
-{% endblock content %}
+</div>
+<hr>  {% endcomment %}

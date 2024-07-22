@@ -1,97 +1,201 @@
-from django.shortcuts import render, redirect
-from django.urls import reverse_lazy
-from django.contrib.auth.views import LoginView, PasswordResetView, PasswordChangeView
+from django.shortcuts import reverse, render , redirect
+from django.views.generic import (ListView, CreateView, DeleteView, UpdateView)
+from .forms import UserRegisterForm, UserUpdateForm, ProfileUpdateForm
+from users.models import Lawyers,Clients,Profile
+from multiprocessing import context
+from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages
-from django.contrib.messages.views import SuccessMessageMixin
-from django.views import View
+from django.contrib.auth.models import Group
+from django.contrib.auth import views as auth_views
+
+
+# This decorator is used to ensure that a user can only visit a given page having logged in
+# The decorator extends the functionality of the function profile
 from django.contrib.auth.decorators import login_required
 
-from .forms import RegisterForm, LoginForm, UpdateUserForm, UpdateProfileForm
 
+    
+    # if request.method=="POST":
+    #     return redirect('users/profile')
+    
 
-def home(request):
-    return render(request, 'users/home.html')
-
-
-class RegisterView(View):
-    form_class = RegisterForm
-    initial = {'key': 'value'}
-    template_name = 'users/register.html'
-
-    def dispatch(self, request, *args, **kwargs):
-        # will redirect to the home page if a user tries to access the register page while logged in
-        if request.user.is_authenticated:
-            return redirect(to='/')
-
-        # else process dispatch as it otherwise normally would
-        return super(RegisterView, self).dispatch(request, *args, **kwargs)
-
-    def get(self, request, *args, **kwargs):
-        form = self.form_class(initial=self.initial)
-        return render(request, self.template_name, {'form': form})
-
-    def post(self, request, *args, **kwargs):
-        form = self.form_class(request.POST)
-
+def register(request):
+    if request.method == 'POST':
+        form = UserRegisterForm(request.POST)
         if form.is_valid():
+            # This saves the user that has been created
             form.save()
-
             username = form.cleaned_data.get('username')
-            messages.success(request, f'Account created for {username}')
+            user = form.save()
+            Profile.objects.create(**{'user': user})
+            messages.success(request, f' Your Account  has been created Successfully. Login to view the site {username} !')
+            return redirect('login')
+    else:
+        form = UserRegisterForm()
+    return render(request, 'users/register.html', {'form': form})
 
-            return redirect(to='login')
-
-        return render(request, self.template_name, {'form': form})
-
-
-# Class based view that extends from the built in login view to add a remember me functionality
-class CustomLoginView(LoginView):
-    form_class = LoginForm
-
-    def form_valid(self, form):
-        remember_me = form.cleaned_data.get('remember_me')
-
-        if not remember_me:
-            # set session expiry to 0 seconds. So it will automatically close the session after the browser is closed.
-            self.request.session.set_expiry(0)
-
-            # Set session as modified to force data updates/cookie to be saved.
-            self.request.session.modified = True
-
-        # else browser session will be as long as the session cookie time "SESSION_COOKIE_AGE" defined in settings.py
-        return super(CustomLoginView, self).form_valid(form)
-
-
-class ResetPasswordView(SuccessMessageMixin, PasswordResetView):
-    template_name = 'users/password_reset.html'
-    email_template_name = 'users/password_reset_email.html'
-    subject_template_name = 'users/password_reset_subject'
-    success_message = "We've emailed you instructions for setting your password, " \
-                      "if an account exists with the email you entered. You should receive them shortly." \
-                      " If you don't receive an email, " \
-                      "please make sure you've entered the address you registered with, and check your spam folder."
-    success_url = reverse_lazy('users-home')
-
-
-class ChangePasswordView(SuccessMessageMixin, PasswordChangeView):
-    template_name = 'users/change_password.html'
-    success_message = "Successfully Changed Your Password"
-    success_url = reverse_lazy('users-home')
-
-
+# This will ensure that one can only visit this page having logged in
 @login_required
 def profile(request):
+    # The instance in this case populates the Update Post wuth initial details of the User.
     if request.method == 'POST':
-        user_form = UpdateUserForm(request.POST, instance=request.user)
-        profile_form = UpdateProfileForm(request.POST, request.FILES, instance=request.user.profile)
+        u_form = UserUpdateForm(request.POST, instance=request.user)
+        p_form = ProfileUpdateForm(request.POST, request.FILES, instance=request.user.profile)
+        if u_form.is_valid() and p_form.is_valid():
+            u_form.save()
+            p_form.save()
+            messages.success(request, f'Your account has been updated')
+            return redirect('profile')
+    else:  
+        u_form = UserUpdateForm(instance=request.user)
+        p_form = ProfileUpdateForm(instance=request.user.profile)      
+    context = {
+            'u_form': u_form,
+            'p_form' : p_form
 
-        if user_form.is_valid() and profile_form.is_valid():
-            user_form.save()
-            profile_form.save()
-            messages.success(request, 'Your profile is updated successfully')
-            return redirect(to='users-profile')
-    else:
-        user_form = UpdateUserForm(instance=request.user)
-        profile_form = UpdateProfileForm(instance=request.user.profile)
+    }
+    return render(request, 'users/profile.html', context)
 
-    return render(request, 'users/profile.html', {'user_form': user_form, 'profile_form': profile_form})
+# Clients Views
+
+class ClientsCreateView(CreateView):
+    # it will act on the database table "client"
+    model = Clients
+    # It will require the following fields
+    fields = ['first_name', 'last_name', 'phone_number', 'email', 'username']
+    # It will display the user creation form generated by the view on the "user_detail.html"
+    template_name = 'users/user_detail.html'
+
+    # The url to be redirected to after a new client is successfully added
+    def get_success_url(self):
+        # redirect user back to the page displaying a list of courses
+        return reverse('clients-list')
+
+    # data is passed to the HTML/templates page in a context
+    # override this method to get access to the context
+    # and its data
+    def get_context_data(self, **kwargs):
+        # Call the base implementation first to get a context
+        context = super().get_context_data(**kwargs)
+        # add/create a new context variable called "table_title"
+        # this variable can then be accessed on the template
+        context['table_title'] = 'Add New Clients'
+        return context
+
+
+# The view to display the list of clients, it will inherit from the django built in ListView
+# it will get its data from the clients database table and display the data to the users_list.html
+# page and data will be accessed on the page using the "object_list" variable object
+class ClientsListView(ListView):
+    model = Clients
+    template_name = 'users/users_list.html'
+
+    # overrides this method so as to add custom data to the context object that will be pushed to the
+    # HTML page displaying the data
+    def get_context_data(self, **kwargs):
+        # Call the base implementation first to get a context
+        context = super().get_context_data(**kwargs)
+        context['table_title'] = 'Clients'
+        context['objects_update'] = 'clients-update'
+        context['objects_delete'] = 'clients-delete'
+        return context
+
+
+# The view to be used to delete a Clients, it will accept the "pk" as the variable holding the user_id
+# it will inherit from the django built in DeleteView, it will perform the operation on the Clients
+# database table and will request a user to confirm the deletion operation on the confirm_delete.html
+# It will finally state the url where a user is redirected after a successful deletion
+class ClientsDeleteView(DeleteView):
+    model = Clients
+    success_url = '/users/clients'
+    template_name = 'users/confirm_delete.html'
+
+    # overrides this method so as to add custom data to the context object that will be pushed to the
+    # HTML page displaying the data
+    def get_context_data(self, **kwargs):
+        # Call the base implementation first to get a context
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Delete Client'
+        name = Clients.objects.get(pk=self.kwargs.get('pk')).get_full_name()
+        context['message'] = f'Are you sure you want to delete the Client "{name}"'
+        context['cancel_url'] = 'clients-list'
+        return context
+
+
+# This view will be used to update the Clients details
+class ClientsUpdateView(UpdateView):
+    model = Clients
+    fields = ['first_name', 'last_name', 'phone_number', 'email', 'username']
+    template_name = 'users/user_detail.html'
+
+    def get_success_url(self):
+        return reverse('clients-list')
+
+    def get_context_data(self, **kwargs):
+        # Call the base implementation first to get a context
+        context = super().get_context_data(**kwargs)
+        context['table_title'] = 'Update Client'
+        return context
+    
+# Lawyers Views
+# -----------------------------------------------------------------------------------------------------------------------------------------
+
+# The view to create a Clients, it will inherit from the django built in CreateView
+class LawyersCreateView(CreateView):
+    model = Lawyers
+    fields = ['first_name', 'last_name', 'phone_number', 'email', 'username']
+    template_name = 'users/user_detail.html'
+
+    def get_success_url(self):
+        return reverse('lawyers-list')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['table_title'] = 'Add New lawyer'
+        return context
+
+class LawyersListView(ListView):
+    model = Lawyers
+    template_name = 'users/users_list.html'
+
+    def get_context_data(self, **kwargs):
+        # Call the base implementation first to get a context
+        context = super().get_context_data(**kwargs)
+        context['table_title'] = 'Lawyers'
+        context['objects_update'] = 'lawyers-update'
+        context['objects_delete'] = 'lawyers-delete'
+        return context
+
+
+class LawyersDeleteView(DeleteView):
+    model = Lawyers
+    template_name = 'users/confirm_delete.html'
+
+    def get_success_url(self):
+        return reverse('lawyers-list')
+
+    # overrides this method so as to add custom data to the context object that will be pushed to the
+    # HTML page displaying the data
+    def get_context_data(self, **kwargs):
+        # Call the base implementation first to get a context
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Delete Lawyer'
+        name = Lawyers.objects.get(pk=self.kwargs.get('pk')).get_full_name()
+        context['message'] = f'Are you sure you want to delete the lawyer "{name}"'
+        context['cancel_url'] = 'lawyers-list'
+        return context
+
+
+class LawyersUpdateView(UpdateView):
+    model = Lawyers
+    fields = ['first_name', 'last_name', 'phone_number', 'email', 'username']
+    template_name = 'users/user_detail.html'
+
+    def get_success_url(self):
+        return reverse('lawyers-list')
+
+    def get_context_data(self, **kwargs):
+        # Call the base implementation first to get a context
+        context = super().get_context_data(**kwargs)
+        context['table_title'] = 'Update Lawyer'
+        return context
