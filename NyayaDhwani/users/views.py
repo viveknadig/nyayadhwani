@@ -7,7 +7,8 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages
 from django.contrib.auth.models import Group
 from django.contrib.auth import views as auth_views
-
+from django.urls import reverse_lazy
+from django.contrib.auth.mixins import UserPassesTestMixin
 
 # This decorator is used to ensure that a user can only visit a given page having logged in
 # The decorator extends the functionality of the function profile
@@ -18,6 +19,13 @@ from django.contrib.auth.decorators import login_required
     # if request.method=="POST":
     #     return redirect('users/profile')
     
+class checksuper(UserPassesTestMixin):
+    login_url='/users/login'
+    def test_func(self): # nw
+        return self.request.user.is_superuser
+    
+
+
 
 def register(request):
     if request.method == 'POST':
@@ -58,7 +66,7 @@ def profile(request):
 
 # Clients Views
 
-class ClientsCreateView(CreateView):
+class ClientsCreateView(checksuper,CreateView):
     # it will act on the database table "client"
     model = Clients
     # It will require the following fields
@@ -86,9 +94,11 @@ class ClientsCreateView(CreateView):
 # The view to display the list of clients, it will inherit from the django built in ListView
 # it will get its data from the clients database table and display the data to the users_list.html
 # page and data will be accessed on the page using the "object_list" variable object
-class ClientsListView(ListView):
+class ClientsListView(checksuper,ListView):
     model = Clients
     template_name = 'users/users_list.html'
+
+
 
     # overrides this method so as to add custom data to the context object that will be pushed to the
     # HTML page displaying the data
@@ -105,7 +115,7 @@ class ClientsListView(ListView):
 # it will inherit from the django built in DeleteView, it will perform the operation on the Clients
 # database table and will request a user to confirm the deletion operation on the confirm_delete.html
 # It will finally state the url where a user is redirected after a successful deletion
-class ClientsDeleteView(DeleteView):
+class ClientsDeleteView(checksuper,DeleteView):
     model = Clients
     success_url = '/users/clients'
     template_name = 'users/confirm_delete.html'
@@ -123,7 +133,7 @@ class ClientsDeleteView(DeleteView):
 
 
 # This view will be used to update the Clients details
-class ClientsUpdateView(UpdateView):
+class ClientsUpdateView(checksuper,UpdateView):
     model = Clients
     fields = ['first_name', 'last_name', 'phone_number', 'email', 'username']
     template_name = 'users/user_detail.html'
@@ -141,7 +151,7 @@ class ClientsUpdateView(UpdateView):
 # -----------------------------------------------------------------------------------------------------------------------------------------
 
 # The view to create a Clients, it will inherit from the django built in CreateView
-class LawyersCreateView(CreateView):
+class LawyersCreateView(checksuper,CreateView):
     model = Lawyers
     fields = ['first_name', 'last_name', 'phone_number', 'email', 'username']
     template_name = 'users/user_detail.html'
@@ -154,7 +164,7 @@ class LawyersCreateView(CreateView):
         context['table_title'] = 'Add New lawyer'
         return context
 
-class LawyersListView(ListView):
+class LawyersListView(checksuper,ListView):
     model = Lawyers
     template_name = 'users/users_list.html'
 
@@ -167,7 +177,7 @@ class LawyersListView(ListView):
         return context
 
 
-class LawyersDeleteView(DeleteView):
+class LawyersDeleteView(checksuper,DeleteView):
     model = Lawyers
     template_name = 'users/confirm_delete.html'
 
@@ -186,7 +196,7 @@ class LawyersDeleteView(DeleteView):
         return context
 
 
-class LawyersUpdateView(UpdateView):
+class LawyersUpdateView(checksuper,UpdateView):
     model = Lawyers
     fields = ['first_name', 'last_name', 'phone_number', 'email', 'username']
     template_name = 'users/user_detail.html'
