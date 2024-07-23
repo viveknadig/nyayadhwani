@@ -138,6 +138,8 @@ MEDIA_URL = '/media/'
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 LOGIN_REDIRECT_URL = '/'
-LOGIN_URL = 'login'
+LOGIN_URL ='/users/login'
 
 LOGIN_REDIRECT_URL = '/users/profile'
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'

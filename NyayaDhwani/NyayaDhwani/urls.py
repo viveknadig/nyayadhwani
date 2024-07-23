@@ -27,10 +27,10 @@ import users.urls
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('test',views.test,name='test'),
     path('',views.homepage,name='home'),
-    path('index.html',views.homepage,name='home'),
-    path('about.html',views.about),
-    path('contact.html',views.contact),
-    path('service.html',views.service),
+    path('about',views.about,name='about'),
+    path('contact',views.contact,name='contact'),
+    path('service',views.service,name='service'),
     path('users/', include('users.urls')),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

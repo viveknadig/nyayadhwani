@@ -8,7 +8,10 @@ from django.conf.urls.static import static
 from users.views import (ClientsListView, ClientsCreateView, ClientsUpdateView, ClientsDeleteView,
                          LawyersListView, LawyersCreateView, LawyersUpdateView, LawyersDeleteView)
 
+app_name = 'users'
+
 urlpatterns = [
+    
     # path('admin/', admin.site.urls),
     path('register/', user_views.register, name='register'),
     path('profile/', user_views.profile, name='profile'),
@@ -27,4 +30,5 @@ urlpatterns = [
     path('lawyers/new/', LawyersCreateView.as_view(), name='lawyers-create'),
     path('lawyers/<int:pk>/update/', LawyersUpdateView.as_view(), name='lawyers-update'),
     path('lawyers/<int:pk>/delete/', LawyersDeleteView.as_view(), name='lawyers-delete'),
+    path('dashboard',user_views.dashboard,name='dashboard'),
 ]

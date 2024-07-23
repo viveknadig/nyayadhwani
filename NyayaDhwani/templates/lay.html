@@ -48,19 +48,19 @@
                         <div class="collapse navbar-collapse main-menu-item" id="navbarSupportedContent">
                             <ul class="navbar-nav">
                                 <li class="nav-item">
-                                    <a class="nav-link" href="{% url 'home' %}">Home</a>
+                                    <a class="nav-link" href="index.html">Home</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="{% url 'about' %}">About</a>
+                                    <a class="nav-link" href="about.html">About</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="{% url 'service' %}">Service</a>
+                                    <a class="nav-link" href="service.html">Service</a>
                                 </li>
                                 <li class="nav-item">
                                     <a class="nav-link" href="attorneys.html">Attorneys</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="{% url 'contact' %}">Contact</a>
+                                    <a class="nav-link" href="contact.html">Contact</a>
                                 </li>
                             </ul>
                             <div class="collapse navbar-collapse" id="mainMenu">
@@ -72,7 +72,7 @@
                                       </a>
                                       <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userMenu">
                                         <a class="dropdown-item" href="{% url 'users:profile'%}">My account</a>
-                                        <a class="dropdown-item" href="{%url 'users:dashboard'%}">DashBoard</a>
+                                        <a class="dropdown-item" href="">DashBoard</a>
                                         <div class="dropdown-divider" class="dropdown-item"></div>
                                         <form method="post" action="{% url 'users:logout' %}">
                                             {% csrf_token %}
@@ -109,7 +109,7 @@
             <div class="row justify-content-between">
                 <div class="col-sm-6 col-xl-3">
                     <div class="single-footer-widget footer_1">
-                        <a href="{% url 'home' %}"> <img src="{% static 'img/footer-logo.png' %}" alt=""> </a>
+                        <a href="index.html"> <img src="{% static 'img/footer-logo.png' %}" alt=""> </a>
                         <p>Law Partners is a full service law firm that has its roots in litigation. the firm believes strongly in integrity, hard work and ethics. It prides itself on championing the interest of the client while never forgetting its core values.  </p>
                         <div class="social_icon">
                             <a href="#"> <i class="ti-facebook"></i> </a>
@@ -123,12 +123,12 @@
                     <div class="single-footer-widget">
                         <h4>Our Service</h4>
                         <ul>
-                            <li><a href="{% url 'service' %}">Car accident</a></li>
-                            <li><a href="{% url 'service' %}">Personal injury</a></li>
-                            <li><a href="{% url 'service' %}">Family law</a></li>
-                            <li><a href="{% url 'service' %}">Bank and financial</a></li>
-                            <li><a href="{% url 'service' %}">Capital market</a></li>
-                            <li><a href="{% url 'service' %}">Employment Law</a></li>
+                            <li><a href="service.html">Car accident</a></li>
+                            <li><a href="service.html">Personal injury</a></li>
+                            <li><a href="service.html">Family law</a></li>
+                            <li><a href="service.html">Bank and financial</a></li>
+                            <li><a href="service.html">Capital market</a></li>
+                            <li><a href="service.html">Employment Law</a></li>
                         </ul>
 
                     </div>

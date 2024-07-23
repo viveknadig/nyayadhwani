@@ -14,18 +14,23 @@ from django.contrib.auth.mixins import UserPassesTestMixin
 # The decorator extends the functionality of the function profile
 from django.contrib.auth.decorators import login_required
 
-
+def checktype(request):
+    return request.user.email.endswith('@nyayadhwani.com')
+    
     
     # if request.method=="POST":
     #     return redirect('users/profile')
     
 class checksuper(UserPassesTestMixin):
-    login_url='/users/login'
     def test_func(self): # nw
         return self.request.user.is_superuser
     
 
-
+def dashboard(request):
+    if checktype(request):
+        return redirect('dashboard/lawyer/')
+    else:
+        return redirect('dashboard/client/')
 
 def register(request):
     if request.method == 'POST':
@@ -106,8 +111,8 @@ class ClientsListView(checksuper,ListView):
         # Call the base implementation first to get a context
         context = super().get_context_data(**kwargs)
         context['table_title'] = 'Clients'
-        context['objects_update'] = 'clients-update'
-        context['objects_delete'] = 'clients-delete'
+        context['objects_update'] = 'users:clients-update'
+        context['objects_delete'] = 'users:clients-delete'
         return context
 
 

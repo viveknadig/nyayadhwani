@@ -13,3 +13,6 @@ def contact(request):
 def service(request):
     return render(request,'service.html')
 
+def test(request):
+    return render(request,'lay.html')
+

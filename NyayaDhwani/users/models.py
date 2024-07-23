@@ -6,6 +6,8 @@ from distutils.command.upload import upload
 from django.db import models
 from django.contrib.auth.models import User
 from PIL import Image
+from django.contrib.auth.models import Group, User, Permission
+
 
 
 class Lawyers(User):
@@ -17,7 +19,6 @@ class Lawyers(User):
         verbose_name_plural = 'Lawyers'
 
 class Clients(User):
-
     phone_number = models.CharField(unique=True, max_length=10)
     class Meta:
         verbose_name_plural = 'Clients'
