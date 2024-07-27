@@ -42,7 +42,7 @@ def register(request):
             user = form.save()
             Profile.objects.create(**{'user': user})
             messages.success(request, f' Your Account  has been created Successfully. Login to view the site {username} !')
-            return redirect('login')
+            return redirect('users:login')
     else:
         form = UserRegisterForm()
     return render(request, 'users/register.html', {'form': form})
@@ -58,7 +58,7 @@ def profile(request):
             u_form.save()
             p_form.save()
             messages.success(request, f'Your account has been updated')
-            return redirect('profile')
+            return redirect('users:profile')
     else:  
         u_form = UserUpdateForm(instance=request.user)
         p_form = ProfileUpdateForm(instance=request.user.profile)      
@@ -177,8 +177,8 @@ class LawyersListView(checksuper,ListView):
         # Call the base implementation first to get a context
         context = super().get_context_data(**kwargs)
         context['table_title'] = 'Lawyers'
-        context['objects_update'] = 'lawyers-update'
-        context['objects_delete'] = 'lawyers-delete'
+        context['objects_update'] = 'users:lawyers-update'
+        context['objects_delete'] = 'users:lawyers-delete'
         return context
 
 
