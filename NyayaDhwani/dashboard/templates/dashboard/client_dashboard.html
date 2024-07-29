@@ -1,0 +1,144 @@
+{% extends "layout.html" %}
+{% load static %}
+{% block content %}
+
+</br></br></br></br></br></br></br></br>
+
+<style>
+
+    .bg-drk-purple{
+        background: purple;
+      }
+      .text-white::placeholder {
+        color: white;
+        opacity: 1; /* Firefox */
+      }
+      
+      .text-white:-ms-input-placeholder { /* Internet Explorer 10-11 */
+       color: white;
+      }
+      
+      .text-white::-ms-input-placeholder { /* Microsoft Edge */
+       color: white;
+      }
+      .bd-placeholder-img {
+              font-size: 1.125rem;
+              text-anchor: middle;
+              -webkit-user-select: none;
+              -moz-user-select: none;
+              -ms-user-select: none;
+              user-select: none;
+            }
+      
+            @media (min-width: 768px) {
+              .bd-placeholder-img-lg {
+                font-size: 3.5rem;
+              }
+            }
+</style>
+<main role="main" class="col-md-9 col-lg-10 px-4">
+    <h1 class="h2">Dashboard</h1>
+    <div class="btn-toolbar mb-2 mb-md-0">
+    <div class="btn-group mr-2">
+    <button type="button" class="btn btn-sm btn-outline-secondary">Share</button>
+    <button type="button" class="btn btn-sm btn-outline-secondary">Export</button>
+    </div>
+    <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle">
+    <span data-feather="calendar"></span>
+    This week
+    </button>
+    </div>
+    <div class="row mb-3">
+  <div class="col-xl-3 col-sm-6 py-2">
+      <div class="card bg-success text-white h-100">
+        <a href="{% url 'dashboard:active-case-list' %}">
+          <div class="card-body bg-success">
+              <div class="rotate">
+                  <i class="far fa-clock fa-4x"></i>
+              </div>
+              <br>
+              <h6 class="text-uppercase">Ongoing</h6>
+              <h1 class="display-4">{{on}}</h1>
+          </div>
+        </a>
+      </div>
+  </div>
+  <div class="col-xl-3 col-sm-6 py-2">
+      <div class="card text-white bg-danger h-100">
+        <a href="{% url 'dashboard:total-case-list' %}">
+          <div class="card-body bg-danger">
+              <div class="rotate">
+                  <i class="fa fa-list fa-4x"></i>
+              </div>
+              <br>
+              <h6 class="text-uppercase">Total</h6>
+              <h1 class="display-4">{{total}}</h1>
+          </div>
+        </a>
+      </div>
+  </div>
+  <div class="col-xl-3 col-sm-6 py-2">
+      <div class="card text-white bg-info h-100">
+        <a href="{% url 'dashboard:won-case-list' %}">
+          <div class="card-body bg-info">
+              <div class="rotate">
+                  <i class="far fa-check-circle fa-4x"></i>
+              </div>
+              <br>
+              <h6 class="text-uppercase">Won</h6>
+              <h1 class="display-4">{{won}}</h1>
+          </div>
+        </a>
+      </div>
+  </div>
+  <div class="col-xl-3 col-sm-6 py-2">
+      <div class="card text-white bg-warning h-100">
+        <a href="{% url 'dashboard:loss-case-list' %}">
+          <div class="card-body">
+              <div class="rotate">
+                  <i class="fas fa-skull-crossbones fa-4x"></i>
+              </div>
+              <br>
+              <h6 class="text-uppercase">Lost</h6>
+              <h1 class="display-4">{{loss}}</h1>
+          </div>
+        </a>
+      </div>
+  </div>
+</div>
+
+
+
+
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+
+
+
+</div>
+
+
+
+
+
+<div class="col-md-4 col-sm-6 mb-3">
+    <h4>Have a Complaint?</h4>
+    <br>
+    <form method="post" action="{% url 'dashboard:register_case' %}">
+        {% csrf_token %}
+        <button class="btn btn-warning w-100">Register A Complaint</button>
+        
+    </form>
+  </div>
+
+
+</div>
+</div>
+
+</div>
+
+
+
+</main>
+</div>
+</div>
+{%endblock%}

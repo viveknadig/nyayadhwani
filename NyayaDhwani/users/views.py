@@ -9,6 +9,7 @@ from django.contrib.auth.models import Group
 from django.contrib.auth import views as auth_views
 from django.urls import reverse_lazy
 from django.contrib.auth.mixins import UserPassesTestMixin
+from dashboard import urls,views
 
 # This decorator is used to ensure that a user can only visit a given page having logged in
 # The decorator extends the functionality of the function profile
@@ -28,9 +29,11 @@ class checksuper(UserPassesTestMixin):
 
 def dashboard(request):
     if checktype(request):
-        return redirect('dashboard/lawyer/')
+        return redirect('dashboard:lawyers')
+    
+    
     else:
-        return redirect('dashboard/client/')
+        return redirect('dashboard:clients')
 
 def register(request):
     if request.method == 'POST':

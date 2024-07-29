@@ -7,7 +7,7 @@ class UserRegisterForm(UserCreationForm):
     email = forms.EmailField()
     phone_number = forms.NumberInput()
     class Meta:
-        model = Lawyers
+        model = Clients
         fields = ['username', 'email','password1', 'password2','phone_number']
         
 class UserUpdateForm(forms.ModelForm):

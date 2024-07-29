@@ -12,7 +12,6 @@ from django.contrib.auth.models import Group, User, Permission
 
 class Lawyers(User):
     # Will have an additional phone_number field
-    # Doctor_level = models.CharField(Required)
     phone_number = models.CharField(unique=True, max_length=17) 
 
     class Meta: 

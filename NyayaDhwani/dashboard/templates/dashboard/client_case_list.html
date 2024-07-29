@@ -1,0 +1,48 @@
+{% extends "layout.html" %}
+{% load static %}
+{% block content %}
+<br><br><br><br><br><br>
+    <div class="right_col" role="main">
+            <div class="">
+              <div class="row">
+                <div class="col-md-12 col-sm-12 col-xs-12">
+                  <div class="x_panel">
+                    <div class="x_title">
+                      <h2 class="text-center">All Cases</h2>
+                      <div class="clearfix"></div>
+                    </div>
+                    <div class="x_content">
+                      <table id="object-datatable" class="table table-bordered">
+                        <thead class="table-dark">
+                          <tr>
+                            <th>Lawyer Name</th>
+                            <th>Description</th>
+                            <th>Court</th>
+                            <th>Date of Hearing</th>
+                            <th>Active</th>
+                            <th>Status</th>
+                          </tr>
+                        </thead>
+
+                        <tbody>
+                            {% for object in object_list %}
+                                <tr>
+                                    <td>{{ object.Lawyer_id}}</td>
+                                    <td>{{ object.Description }}</td>
+                                    <td>{{ object.court_name }}</td>
+                                    <td>{{ object.Date_of_hearing}}</td>
+                                    <td>{{ object.Active }}</td>
+                                    <td>{{ object.status }}</td>
+                                  </tr>
+                            {% endfor %}
+                        </tbody>
+                      </table>
+
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+{% endblock content%}

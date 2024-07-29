@@ -31,4 +31,6 @@ urlpatterns = [
     path('lawyers/<int:pk>/update/', LawyersUpdateView.as_view(), name='lawyers-update'),
     path('lawyers/<int:pk>/delete/', LawyersDeleteView.as_view(), name='lawyers-delete'),
     path('dashboard',user_views.dashboard,name='dashboard'),
+
+
 ]
