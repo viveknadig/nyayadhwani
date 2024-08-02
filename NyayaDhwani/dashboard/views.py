@@ -41,24 +41,26 @@ def clients(request):
     else:
         raise PermissionDenied
 def allocate_lawyer(type):
-    matching_lawyers=lawyer_type.objects.filter(type_of_lawyer=type).values('lawyer_id').first()
-    lawyer=matching_lawyers
-    return lawyer
+    matching_lawyers_id=lawyer_type.objects.filter(type_of_lawyer=type).values('lawyer').first()
+    # matching_lawyers=lawyer_type.objects.get(type_of_case=type)
+    lawyer_id=matching_lawyers_id.get('lawyer')
+    return lawyer_id
 
 def reg(request):
     form = register_new_case(request.POST,request.FILES)
     if form.is_valid():
-        print("yes")
         form.save()
         use=form.save()
         desc=form.cleaned_data.get('Descriptions')
-        username=request.user.username
+        username=request.user.id
         toc=form.cleaned_data.get('type_of_case')
         proof=form.cleaned_data.get('proofs')
-        law=allocate_lawyer(toc)
-
+        law_id=allocate_lawyer(toc)
+        new_case=case(client_id_id=username,lawyer_id=law_id,Description=desc,image=proof)
+        new_case.save()
+        return redirect('users:dashboard')
     else:
-        print("no")
+        form = register_new_case
     return render(request,'dashboard/reg.html',{'form': form})
 
 def total_client_list(request):

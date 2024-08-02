@@ -1,5 +1,5 @@
 from django.db import models
-
+from datetime import datetime,timedelta
 from tabnanny import verbose
 # from typing_extensions import Required
 from django.db import models
@@ -16,7 +16,12 @@ case_choice=(
     ("lost","lost"),
     ("ongoing","ongoing"),
 )
+court_choice={
+    ("high-court","high-court"),
+    ("district-court","district-court"),
+    ("supreme-court","supreme-court"),
 
+}
 active_choice=(
     ("Yes","Yes"),
     ("No","No"),
@@ -33,7 +38,7 @@ type_of_cases=(
 )
 # Create your models here.
 class lawyer_type(models.Model):
-    lawyer_id=models.ForeignKey(Lawyers,on_delete=models.CASCADE)
+    lawyer=models.ForeignKey(Lawyers,on_delete=models.CASCADE)
     type_of_lawyer=models.CharField(max_length=100,choices=type_of_cases)
 
 
@@ -52,13 +57,13 @@ class register_case(models.Model):
 
 class case(models.Model):
     case_id=models.AutoField(primary_key=True)
-    client_id=models.ForeignKey(Clients,on_delete=models.CASCADE)
-    Lawyer_id=models.ForeignKey(Lawyers,on_delete=models.CASCADE)
+    client_id=models.ForeignKey(Clients,on_delete=models.CASCADE,db_constraint=False)
+    lawyer=models.ForeignKey(Lawyers,on_delete=models.CASCADE,db_constraint=False)
     Description=models.CharField(max_length=250)
     image= models.ImageField(default='evid.png', upload_to='evidence_images')
     Active=models.CharField(max_length=100,choices=active_choice,default="Yes")
-    court_name=models.CharField(max_length=200)
-    Date_of_hearing=models.DateField(default=None)
+    court_name=models.CharField(max_length=100,choices=court_choice,default="district-court")
+    Date_of_hearing=models.DateField(default=datetime.now()+timedelta(days=1))
     status=models.CharField(max_length=20,choices=case_choice,default="ongoing")
 
     def __str__ (self):
