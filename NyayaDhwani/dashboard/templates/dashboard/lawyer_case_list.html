@@ -17,7 +17,7 @@
                         <thead class="table-dark">
                           <tr class="text-center">
                             <th class="col-1">Case<br>Number</th>
-                            <th class="col-1">Lawyer <br>Name</th>
+                            <th class="col-1">Client <br>Name</th>
                             <th class="col-2">Description</th>
                             <th class="col-1">Court</th>
                             <th class="col-1">Date of <br>Hearing</th>
@@ -32,16 +32,19 @@
                             {% for object in object_list %}
                                 <tr class="text-center">
                                     <td class="col-1">{{ object.case_id}}</td>
-                                    <td class="col-1">{{ object.lawyer}}</td>
+                                    <td class="col-1">{{ object.client_id}}</td>
                                     <td class="col-1">{{ object.Description }}</td>
                                     <td class="col-1">{{ object.court_name }}</td>
                                     <td class="col-1">{{ object.Date_of_hearing}}</td>
                                     <td class="col-1">{{ object.Active }}</td>
                                     <td class="col-1"><h4><span class="{% if object.status == 'won' %}badge badge-success rounded-pill d-inline w-100 {% elif object.status == 'ongoing' %}badge badge-warning rounded-pill d-inline w-100 {%else%}badge badge-danger rounded-pill d-inline w-100{% endif %}">{{ object.status }}</span></h4> </td>
-                                    <td class="col-1 text-center"><a href="{% url 'dashboard:case-view' object.pk %}" class="btn btn-primary btn-xs text-center"><i class="fa fa-pencil"></i> View </a>
+                                    
+                                    <td class="col-2"><a href="{% url 'dashboard:case-view' object.pk %}" class="btn btn-primary btn-xs"><i class="fa fa-pencil"></i> View </a>     
+                                        
+                                    <a href="{% url 'dashboard:case-edit' object.pk %}" class="btn btn-primary btn-xs"><i class="fa fa-pencil"></i>Edit</a></td>
                                   </tr>
                             {% endfor %}
-                                </div>
+                          </div>
                         </tbody>
                       </table>
 

@@ -18,10 +18,6 @@ from django.contrib.auth.decorators import login_required
 def checktype(request):
     return request.user.email.endswith('@nyayadhwani.com')
     
-    
-    # if request.method=="POST":
-    #     return redirect('users/profile')
-    
 class checksuper(UserPassesTestMixin):
     def test_func(self): # nw
         return self.request.user.is_superuser

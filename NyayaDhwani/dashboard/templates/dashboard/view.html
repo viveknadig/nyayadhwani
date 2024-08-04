@@ -1,0 +1,31 @@
+{% extends "layout.html" %}
+{% load static %}
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/card.css' %}">
+
+<br><br><br><br><br><br>
+          <h1>Case-Details</h1>
+
+<div class="card">
+    {% for object in details %}
+  <img src="{{object.image.url}}" class="card-media" />
+  <div class="card-details">
+    <br>
+    <h4>Case Number: #{{ object.case_id}}</h4>
+    <h4>Client-Name : {{object.client_id.username}}</h4>
+    <h4>Lawyer-Name : {{object.lawyer.username}}</h4>
+    <h4>Court-Name : {{object.court_name}}</h4>
+    <h4>Date of Hearing : {{object.Date_of_hearing}}</h4>
+    <br>
+    <h5>Description:</h5>
+    <p>{{ object.Description }}</p>
+    <br>
+    <h5>Currently Active:</h5> 
+    <h4><span class="{% if object.Active == 'Yes' %}badge badge-success rounded-pill d-inline w-100 {%else%}badge badge-danger rounded-pill d-inline w-100{% endif %}">{{ object.Active }}</span></h4> 
+    <h5>Staus:</h5>
+    <h4><span class="{% if object.status == 'won' %}badge badge-success rounded-pill d-inline w-100 {% elif object.status == 'ongoing' %}badge badge-warning rounded-pill d-inline w-100 {%else%}badge badge-danger rounded-pill d-inline w-100{% endif %}">{{ object.status }}</span></h4>
+  </div>
+  {% endfor %}
+</div>
+<br>
+{% endblock content%}
