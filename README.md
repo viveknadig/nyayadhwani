@@ -3,7 +3,8 @@
   
   An online E-Portal for various type of case hearings
   is a web-based application built with the Django framework. This platform allows users to create and manage legal cases, while also enabling lawyers to oversee and manage these cases efficiently.
-  
+
+  ## [Live Demo!](https://nyayadhwani.pythonanywhere.com)
   ## Features
   
 - **User Management**: Create and manage user accounts.
