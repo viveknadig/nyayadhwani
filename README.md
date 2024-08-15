@@ -36,7 +36,7 @@ Follow the steps below to set up and run the web app:
 3. Create a virtual environment:
 	- Windows:
 	```shell
-	   python3 -m venv venv
+	   py -m venv venv
    ```
 	- Linux/Mac-OS:
 	```shell
@@ -58,29 +58,29 @@ Follow the steps below to set up and run the web app:
    pip install -r requirements.txt
    ```
 
-6. Create the database:
+6. Create the database:(For Windows:follow py instead of python3)
    ```shell
-   python manage.py makemigrations
+   python3 manage.py makemigrations
    ```
 
 7. Apply database changes:
    ```shell
-   python manage.py migrate
+   python3 manage.py migrate
    ```
 8. Create a Super User:
    ```shell
-	python manage.py createsuperuser
+	python3 manage.py createsuperuser
 	Username : admin
 	Password : admin
 	```
 9. Start the server:
     ```shell
-    python manage.py runserver
+    python3 manage.py runserver
     ```
     (optional) Run on custom port number
     ```shell
 	#For example: python manage.py runserver <port_number>
-    python manage.py runserver 3000
+    python3 manage.py runserver 3000
     ```
 10. Create Lawyers:
     ```
