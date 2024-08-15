@@ -58,7 +58,7 @@ Follow the steps below to set up and run the web app:
    pip install -r requirements.txt
    ```
 
-6. Create the database:(For Windows:follow py instead of python3)
+6. Create the database:	 (For Windows: follow py instead of python3)
    ```shell
    python3 manage.py makemigrations
    ```
